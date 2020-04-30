@@ -59,6 +59,12 @@ namespace LoadObjectTest
 
             var assetPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(CWD,@"..\..\..\LoadObjectTest\DynLoadAssets\drone2\Drone2.obj"));
 
+            if (!System.IO.File.Exists(assetPath)) {     
+                // not sure why, but DebugText.Print isn't working at the time of testing this...
+                DebugText.Print("Cannot find wavefront OBJ file at : " + assetPath, new Int2(50,50));
+                return;
+            }
+
             // load the wavefront OBJ file...
             var wfData = new SimpleScene.Util3d.WavefrontObjLoader(assetPath);
             
