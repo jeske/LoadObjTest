@@ -76,16 +76,16 @@ namespace LoadObjectTest
 				// draw is using GL_TRIANGLE, so we convert NGONS into triange lists
 				if (soup_indicies.Length == 3) { // triangle
 					draw_indicies.Add(soup_indicies[0]);
-					draw_indicies.Add(soup_indicies[1]);
 					draw_indicies.Add(soup_indicies[2]);
+					draw_indicies.Add(soup_indicies[1]);
 				} else if (soup_indicies.Length == 4) { // quad
 					draw_indicies.Add(soup_indicies[0]);
-					draw_indicies.Add(soup_indicies[1]);
 					draw_indicies.Add(soup_indicies[2]);
+					draw_indicies.Add(soup_indicies[1]);
 
 					draw_indicies.Add(soup_indicies[0]);
-					draw_indicies.Add(soup_indicies[2]);
 					draw_indicies.Add(soup_indicies[3]);
+					draw_indicies.Add(soup_indicies[2]);
 				} else {
 					// This n-gon algorithm only works if the n-gon is coplanar and convex,
 					// which Wavefront OBJ says they must be. 
@@ -95,8 +95,8 @@ namespace LoadObjectTest
 					// manually generate a triangle-fan
 					for (int x = 1; x < (soup_indicies.Length-1); x++) {
 						draw_indicies.Add(soup_indicies[0]);
-						draw_indicies.Add(soup_indicies[x]);
 						draw_indicies.Add(soup_indicies[x+1]);
+						draw_indicies.Add(soup_indicies[x]);
 					}
 					// throw new NotImplementedException("unhandled face size: " + newindicies.Length);                    
 				}

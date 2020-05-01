@@ -114,6 +114,11 @@ namespace LoadObjectTest
         {
             // Initialization of the script.
             LoadAssetTest();
+             
+            //Find camera, I've only got one so this works. If you've got more 
+            //than one, I guess you'll need to name them or something...
+            // var camera = SceneSystem.SceneInstance.Scene.Entities.First(e => e.Components.ContainsKey(CameraComponent.Key));
+            // camera.Add(new ScriptComponent. { Scripts = { new CameraScript()} });
         }
 
         public override void Update()

@@ -65,6 +65,9 @@ Hierarchy:
                         KeyboardRotationSpeed: {X: 3.0, Y: 3.0}
                         MouseRotationSpeed: {X: 1.0, Y: 1.0}
                         TouchRotationSpeed: {X: 1.0, Y: 0.7}
+                    5a19b888015e0b46eff112835b016f1a: !LoadObjectTest.CameraScript,LoadObjectTest
+                        Id: 884141c1-5e6a-493b-9c12-3c641b0f5388
+                        Camera: ref!! 79819c3f-2e60-4db4-aaa5-f44f7a7d74fd
         -   Entity:
                 Id: cb3e7b11-5abb-405c-aeba-6d856f99c4f9
                 Name: LoadAsset
