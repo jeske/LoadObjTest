@@ -80,6 +80,12 @@ Hierarchy:
                         Children: {}
                     83d053680d7f6e5cc19522dc06933e69: !LoadObjectTest.LoadAsset,LoadObjectTest
                         Id: 3d296aa6-7414-49f7-a95f-d8ff0c9ec9c7
+                        myFont2: 5ada2e64-4c8b-4b19-8421-a9886aabadf6:fonts/SpriteFont
+                    19576aa076cb47930e8a5b94e79640b3: !UIComponent
+                        Id: 3fb525d2-00f6-43a2-962a-f704add24821
+                        Page: null
+                        Resolution: {X: 1280.0, Y: 720.0, Z: 1000.0}
+                        Size: {X: 1.0, Y: 1.0, Z: 1.0}
         -   Entity:
                 Id: d62cf3af-13d6-41ec-b0c7-4bd946628786
                 Name: Skybox
