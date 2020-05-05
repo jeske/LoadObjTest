@@ -46,13 +46,21 @@ namespace LoadObjectTest
         public void CreateUI() {
         // var fontSystem = Services.GetService<FontSystem>();
         // var myFont = fontSystem.NewDynamic(10,"Orkney Regular",FontStyle.Regular);
-             var startButton = new Button
-            {
-                Content = new TextBlock {Font = myFont2, Text = "Touch to Start", TextColor = Color.Black, 
-                    HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center},                
+
+        // https://github.com/stride3d/stride/blob/master/samples/Tutorials/CSharpBeginner/CSharpBeginner/CSharpBeginner.Game/Code/TutorialUI.cs#L34
+            var startButton = new Button {
+                Content = new TextBlock {
+                    Text = "Touch to Start",
+                    Font = myFont2, TextColor = Color.Black, 
+                    HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center,
+                    BackgroundColor = Color.Blue,                  
+                    },                
                 Padding = new Thickness(77, 30, 25, 30),
-                MinimumWidth = 250f,
+                ClickMode = ClickMode.Press,
+                BackgroundColor = Color.Red,
+                MinimumWidth = 250f,                
             };
+            startButton.Click += StartButton_Click;
             var mainCanvas = new Canvas();
             mainCanvas.Children.Add(startButton);
 
@@ -62,10 +70,14 @@ namespace LoadObjectTest
                 // VerticalAlignment = VerticalAlignment.Bottom,
                 DefaultHeight = 200,
                 Content = mainCanvas 
-                };
-            
+                };            
 
             Entity.Get<UIComponent>().Page = new UIPage { RootElement = mainMenuRoot };
+        }
+
+        private void StartButton_Click(object sender, Stride.UI.Events.RoutedEventArgs e) {
+                        LoadAssetTest(new Vector3(0f,4f,0f));
+
         }
 
         private Texture textureObjectForWfTex(string textureFilename) {           
@@ -75,14 +87,14 @@ namespace LoadObjectTest
             return textureObject;
         }
 
-        public void LoadAssetTest() {
+        public void LoadAssetTest(Vector3 position) {
         
             // Create a new entity and add it to the scene.
             var entity = new Entity();
             
             var rootScene = SceneSystem.SceneInstance.RootScene;
             entity.Transform.Scale = new Vector3(0.2f,0.2f,0.2f);
-            entity.Transform.Position = new Vector3(0f,2f,0f);
+            entity.Transform.Position = position;
             entity.Transform.RotationEulerXYZ = new Vector3(0,20,0);
             
             // Create a new model from code
@@ -209,7 +221,7 @@ namespace LoadObjectTest
         public override void Start()
         {
             // Initialization of the script.
-            LoadAssetTest();
+            LoadAssetTest(new Vector3(0f,2f,0f));
             CreateUI();
              
             //Find camera, I've only got one so this works. If you've got more 
