@@ -24,6 +24,7 @@ using Stride.Rendering.Fonts;
 using Stride.Graphics.Font;
 using SimpleScene.Util3d;
 using System.Data.SqlTypes;
+using SharpDX.DXGI;
 
 
 // NOTE: REMEMBER TO CREATE AN EMPTY ENTITY, and add this script as a component!
@@ -123,15 +124,17 @@ namespace LoadObjectTest
                 var indexBuffer = Stride.Graphics.Buffer.Index.New(GraphicsDevice, triIndices);
 
                 // add them to the drawing 
-                var customMesh = new Stride.Rendering.Mesh { 
-                    Draw = new Stride.Rendering.MeshDraw { 
+                var meshDraw = new Stride.Rendering.MeshDraw { 
                             /* Vertex buffer and index buffer setup */ 
                             PrimitiveType = Stride.Graphics.PrimitiveType.TriangleList,
                             DrawCount = triIndices.Length,
                             VertexBuffers = new[] { new VertexBufferBinding(vertexBuffer, VertexPositionNormalTexture.Layout, vertexBuffer.ElementCount) },               
                             IndexBuffer = new IndexBufferBinding(indexBuffer, true, triIndices.Length),                            
-                        } };    
-                // customMesh.Draw.GenerateTangentBinormal();
+                        };
+                // meshDraw.GenerateTangentBinormal();
+
+                var customMesh = new Stride.Rendering.Mesh { Draw = meshDraw };    
+                
 
                 // set the material index for this mesh
                 // customMesh.MaterialIndex = 0;
@@ -171,7 +174,8 @@ namespace LoadObjectTest
             var diffuseTexture = textureObjectForWfTex(System.IO.Path.Combine(assetBase,wfData.materials[0].mtl.diffuseTextureResourceName));
             var specularTexture = textureObjectForWfTex(System.IO.Path.Combine(assetBase,wfData.materials[0].mtl.specularTextureResourceName));            
             var emissiveTexture = textureObjectForWfTex(System.IO.Path.Combine(assetBase,wfData.materials[0].mtl.ambientTextureResourceName));
-            var bumpTexture = textureObjectForWfTex(System.IO.Path.Combine(assetBase,wfData.materials[0].mtl.bumpTextureResourceName));
+            var bumpTexture = textureObjectForWfTex(System.IO.Path.Combine(assetBase,wfData.materials[0].mtl.bumpTextureResourceName));                       
+                        
 
             var cc = new ComputeColor();
             
@@ -182,13 +186,13 @@ namespace LoadObjectTest
                     Attributes =
                     {                   
                         DiffuseModel = new MaterialDiffuseLambertModelFeature(),                        
-                        // Diffuse = new MaterialDiffuseMapFeature(new ComputeTextureColor(diffuseTexture)),
-
-                        // SpecularModel = new MaterialSpecularMicrofacetModelFeature{ Visibility  = new MaterialSpecularMicrofacetVisibilitySmithBeckmann()} ,
+                        Diffuse = new MaterialDiffuseMapFeature(new ComputeTextureColor(diffuseTexture)),
+                        
                         SpecularModel = new MaterialSpecularMicrofacetModelFeature{} ,
                         Specular = new MaterialSpecularMapFeature{ SpecularMap = new ComputeTextureColor(specularTexture)},
+                        MicroSurface = new MaterialGlossinessMapFeature{ GlossinessMap = new ComputeFloat(0.7f) },
 
-                        // Emissive = new MaterialEmissiveMapFeature(new ComputeTextureColor(emissiveTexture)),
+                        Emissive = new MaterialEmissiveMapFeature(new ComputeTextureColor(emissiveTexture)),
 
 
                         // https://gist.github.com/johang88/3f175b045c8e8b55fb815cc19e6128ba
