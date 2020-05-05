@@ -22,6 +22,8 @@ using Stride.UI.Controls;
 using Stride.UI;
 using Stride.Rendering.Fonts;
 using Stride.Graphics.Font;
+using SimpleScene.Util3d;
+using System.Data.SqlTypes;
 
 
 // NOTE: REMEMBER TO CREATE AN EMPTY ENTITY, and add this script as a component!
@@ -65,6 +67,13 @@ namespace LoadObjectTest
             Entity.Get<UIComponent>().Page = new UIPage { RootElement = mainMenuRoot };
         }
 
+        private Texture textureObjectForWfTex(string textureFilename) {           
+            var diffTexStream = System.IO.File.Open(textureFilename,System.IO.FileMode.Open,System.IO.FileAccess.Read);
+            var textureObject = Texture.Load(GraphicsDevice,diffTexStream);
+         
+            return textureObject;
+        }
+
         public void LoadAssetTest() {
         
             // Create a new entity and add it to the scene.
@@ -104,8 +113,8 @@ namespace LoadObjectTest
             var wfData = new SimpleScene.Util3d.WavefrontObjLoader(assetPath);
                         
             // TODO: iterate over materials / multiple materials on the same mesh...
-            {
-                VertexPositionNormalTexture[] vertices;                
+            {                
+                VertexPositionNormalTexture[] vertices;                                
                 UInt32[] triIndices;
                 Wavefront_VertexSoup_Stride3d.generateDrawIndexBuffer(wfData,wfData.materials[0],out triIndices, out vertices);
                                         
@@ -121,7 +130,8 @@ namespace LoadObjectTest
                             DrawCount = triIndices.Length,
                             VertexBuffers = new[] { new VertexBufferBinding(vertexBuffer, VertexPositionNormalTexture.Layout, vertexBuffer.ElementCount) },               
                             IndexBuffer = new IndexBufferBinding(indexBuffer, true, triIndices.Length),                            
-                        } };            
+                        } };    
+                // customMesh.Draw.GenerateTangentBinormal();
 
                 // set the material index for this mesh
                 // customMesh.MaterialIndex = 0;
@@ -153,28 +163,50 @@ namespace LoadObjectTest
              */
 
 
-            // load a texture from a file
-            
-            var diffuseTextureFilename = System.IO.Path.Combine(assetBase,wfData.materials[0].mtl.diffuseTextureResourceName);
-            var diffTexStream = System.IO.File.Open(diffuseTextureFilename,System.IO.FileMode.Open,System.IO.FileAccess.Read);
-            var diffuseTexture = Texture.Load(GraphicsDevice,diffTexStream);
-            
+            // load a texture from a file            
+            // var diffuseTextureFilename = System.IO.Path.Combine(assetBase,wfData.materials[0].mtl.diffuseTextureResourceName);
+            // var diffTexStream = System.IO.File.Open(diffuseTextureFilename,System.IO.FileMode.Open,System.IO.FileAccess.Read);
+            // var diffuseTexture = Texture.Load(GraphicsDevice,diffTexStream);
+
+            var diffuseTexture = textureObjectForWfTex(System.IO.Path.Combine(assetBase,wfData.materials[0].mtl.diffuseTextureResourceName));
+            var specularTexture = textureObjectForWfTex(System.IO.Path.Combine(assetBase,wfData.materials[0].mtl.specularTextureResourceName));            
+            var emissiveTexture = textureObjectForWfTex(System.IO.Path.Combine(assetBase,wfData.materials[0].mtl.ambientTextureResourceName));
+            var bumpTexture = textureObjectForWfTex(System.IO.Path.Combine(assetBase,wfData.materials[0].mtl.bumpTextureResourceName));
 
             var cc = new ComputeColor();
             
             // Create a material (eg with red diffuse color).
-            var materialDescription = new Stride.Rendering.Materials.MaterialDescriptor
             {
-                Attributes =
-                {                   
-                    DiffuseModel = new MaterialDiffuseLambertModelFeature(),
-                    // Diffuse = new MaterialDiffuseMapFeature(new ComputeColor { Key = MaterialKeys.DiffuseValue }),
-                    Diffuse = new MaterialDiffuseMapFeature(new ComputeTextureColor(diffuseTexture)),
-                }
-            };
-            var material = Material.New(GraphicsDevice, materialDescription);
-            // material.Passes[0].Parameters.Set(MaterialKeys.DiffuseValue, Color.Red);            
-            model.Materials.Add(material);
+                var materialDescription = new Stride.Rendering.Materials.MaterialDescriptor
+                {
+                    Attributes =
+                    {                   
+                        DiffuseModel = new MaterialDiffuseLambertModelFeature(),                        
+                        // Diffuse = new MaterialDiffuseMapFeature(new ComputeTextureColor(diffuseTexture)),
+
+                        // SpecularModel = new MaterialSpecularMicrofacetModelFeature{ Visibility  = new MaterialSpecularMicrofacetVisibilitySmithBeckmann()} ,
+                        SpecularModel = new MaterialSpecularMicrofacetModelFeature{} ,
+                        Specular = new MaterialSpecularMapFeature{ SpecularMap = new ComputeTextureColor(specularTexture)},
+
+                        // Emissive = new MaterialEmissiveMapFeature(new ComputeTextureColor(emissiveTexture)),
+
+
+                        // https://gist.github.com/johang88/3f175b045c8e8b55fb815cc19e6128ba
+                        // see TNBExtensions.GenerateTangentBinormal(this MeshDraw meshData)
+                        // Surface = new MaterialNormalMapFeature( new ComputeTextureColor(bumpTexture) ),
+                       
+                        // this is for a solid color rendering...
+                        // Diffuse = new MaterialDiffuseMapFeature(new ComputeColor { Key = MaterialKeys.DiffuseValue }),
+
+                    }
+                };
+                var material = Material.New(GraphicsDevice, materialDescription);            
+                material.Passes[0].Parameters.Set(MaterialKeys.EmissiveIntensity,5.0f);                
+                
+                // this is for solid color rendering...
+                // material.Passes[0].Parameters.Set(MaterialKeys.DiffuseValue, Color.Red);     
+                model.Materials.Add(material);
+           }
             
 
            SceneSystem.SceneInstance.RootScene.Entities.Add(entity);

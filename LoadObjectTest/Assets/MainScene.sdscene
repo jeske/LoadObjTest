@@ -12,6 +12,7 @@ Hierarchy:
         - ref!! 1ad1de7c-9d2f-4447-bd42-fb86ac506d0a
         - ref!! 40165b95-8bc2-4fe8-ac86-1dacb77d3e93
         - ref!! cb3e7b11-5abb-405c-aeba-6d856f99c4f9
+        - ref!! b0e5a059-e101-438b-9b98-3cf3a8fba5ef
     Parts:
         -   Entity:
                 Id: 1ad1de7c-9d2f-4447-bd42-fb86ac506d0a
@@ -68,6 +69,20 @@ Hierarchy:
                     5a19b888015e0b46eff112835b016f1a: !LoadObjectTest.CameraScript,LoadObjectTest
                         Id: 884141c1-5e6a-493b-9c12-3c641b0f5388
                         Camera: ref!! 79819c3f-2e60-4db4-aaa5-f44f7a7d74fd
+        -   Entity:
+                Id: b0e5a059-e101-438b-9b98-3cf3a8fba5ef
+                Name: Teapot
+                Components:
+                    27e4db543a21d9f5bbd814294f265816: !TransformComponent
+                        Id: 02883373-044c-4fe6-96ae-6c79b887718b
+                        Position: {X: -1.74042606, Y: 1.22655952, Z: 4.12792826}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    7efbe7606d5e8a7d5f6077b87d7b87f7: !ModelComponent
+                        Id: a5a7e572-cef5-45ae-9f97-6bded1fdee08
+                        Model: a900bba4-47f6-4574-acf3-eb04fd5b843c:Teapot
+                        Materials: {}
         -   Entity:
                 Id: cb3e7b11-5abb-405c-aeba-6d856f99c4f9
                 Name: LoadAsset
