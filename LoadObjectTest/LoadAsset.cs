@@ -131,6 +131,9 @@ namespace LoadObjectTest
                             VertexBuffers = new[] { new VertexBufferBinding(vertexBuffer, VertexPositionNormalTexture.Layout, vertexBuffer.ElementCount) },               
                             IndexBuffer = new IndexBufferBinding(indexBuffer, true, triIndices.Length),                            
                         };
+
+                // GenerateTangentBinormal() won't work on a GPU buffer. It has to be run when the data is attached to a
+                //    fake CPU buffer. (see build pipeline code)
                 // meshDraw.GenerateTangentBinormal();
 
                 var customMesh = new Stride.Rendering.Mesh { Draw = meshDraw };    
@@ -143,28 +146,6 @@ namespace LoadObjectTest
                 model.Meshes.Add(customMesh);
             }
 
-            /*
-            this is some sample code of how xenko reads a stream
-
-            Texture texture;
-            using (var inStream = game.Content.OpenAsStream(filePath, StreamFlags.None))
-                texture = Texture.Load(device, inStream);
-        
-            var tempStream = new MemoryStream();
-            texture.Save(game.GraphicsContext.CommandList, tempStream, intermediateFormat);
-            tempStream.Position = 0;
-            texture.Dispose();
-
-            using (var inStream = game.Content.OpenAsStream(filePath, StreamFlags.None))
-            using (var originalImage = Image.Load(inStream))
-            {
-                using (var textureImage = Image.Load(tempStream))
-                {
-                    TestImage.CompareImage(originalImage, textureImage, false, 0, fileName);
-                }
-            }        
-             */
-
 
             // load a texture from a file            
             // var diffuseTextureFilename = System.IO.Path.Combine(assetBase,wfData.materials[0].mtl.diffuseTextureResourceName);
@@ -174,7 +155,9 @@ namespace LoadObjectTest
             var diffuseTexture = textureObjectForWfTex(System.IO.Path.Combine(assetBase,wfData.materials[0].mtl.diffuseTextureResourceName));
             var specularTexture = textureObjectForWfTex(System.IO.Path.Combine(assetBase,wfData.materials[0].mtl.specularTextureResourceName));            
             var emissiveTexture = textureObjectForWfTex(System.IO.Path.Combine(assetBase,wfData.materials[0].mtl.ambientTextureResourceName));
-            var bumpTexture = textureObjectForWfTex(System.IO.Path.Combine(assetBase,wfData.materials[0].mtl.bumpTextureResourceName));                       
+            
+            // note: bump/normal mapping won't won't work until Bitangents are calculated
+            // var bumpTexture = textureObjectForWfTex(System.IO.Path.Combine(assetBase,wfData.materials[0].mtl.bumpTextureResourceName));                       
                         
 
             var cc = new ComputeColor();
@@ -195,9 +178,14 @@ namespace LoadObjectTest
                         Emissive = new MaterialEmissiveMapFeature(new ComputeTextureColor(emissiveTexture)),
 
 
+                        // note: normal maps won't work until bitangents are calculated
                         // https://gist.github.com/johang88/3f175b045c8e8b55fb815cc19e6128ba
-                        // see TNBExtensions.GenerateTangentBinormal(this MeshDraw meshData)
-                        // Surface = new MaterialNormalMapFeature( new ComputeTextureColor(bumpTexture) ),
+                        // see TNBExtensions.GenerateTangentBinormal(this MeshDraw meshData)                        
+                        //Surface = new MaterialNormalMapFeature { 
+                        //        NormalMap = new ComputeTextureColor(bumpTexture),
+                        //        IsXYNormal = true,
+                        //        ScaleAndBias = true,                                
+                        //        },
                        
                         // this is for a solid color rendering...
                         // Diffuse = new MaterialDiffuseMapFeature(new ComputeColor { Key = MaterialKeys.DiffuseValue }),
