@@ -18,4 +18,4 @@ Code overview:
 
 Limitations:
 
-- currently only loads the mesh (not materials)... working on it
+- bump/normal map is not loaded or attached (yet)
