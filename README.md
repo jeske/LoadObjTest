@@ -8,7 +8,7 @@ The 3d model is not known when your game is built. For example, if you want to i
 
 You dont want to Dynamic load when:
 
-The 3d model is a fixed part of the game, known at build-time. In this case, you want to load the model as an asset in Stride3d Studio, and make it part of the standard asset build process. This allows you to instantiate the model in the editor/designer, and also in code.
+The 3d model is a fixed part of the game, known at build-time. In this case, you (generally) want to load the model as an asset in Stride3d Studio, and make it part of the standard asset build process. This allows you to instantiate the model in the editor/designer, and also in code.
 
 Code overview:
 
