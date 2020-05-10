@@ -52,13 +52,14 @@ namespace LoadObjectTest
 
         // https://github.com/stride3d/stride/blob/master/samples/Tutorials/CSharpBeginner/CSharpBeginner/CSharpBeginner.Game/Code/TutorialUI.cs#L34
 
+            var numRows = 50;
             
             var grid = new UniformGrid{
                 Name = "grid 1",
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch,
                 BackgroundColor = Color.Yellow,
-                Columns = 2, Rows = 2,
+                Columns = 2, Rows = numRows,
             };
             var scrollV = new ScrollViewer{
                 Name = "scroll 1",
@@ -77,7 +78,7 @@ namespace LoadObjectTest
 
 
             // https://github.com/stride3d/stride/blob/273dfddd462fd3746569f833e1493700c070b14d/sources/engine/Stride.UI.Tests/Regression/CanvasGridTest.cs
-            for (int i=0; i< 3; i++) 
+            for (int i=0; i< numRows; i++) 
             { 
             
                 var startButton = new Button {
