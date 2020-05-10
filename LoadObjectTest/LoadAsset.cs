@@ -25,6 +25,7 @@ using Stride.Graphics.Font;
 using SimpleScene.Util3d;
 using System.Data.SqlTypes;
 using SharpDX.DXGI;
+using System.Diagnostics;
 
 
 // NOTE: REMEMBER TO CREATE AN EMPTY ENTITY, and add this script as a component!
@@ -64,16 +65,15 @@ namespace LoadObjectTest
                 ScrollMode = ScrollingMode.Vertical,
                 BackgroundColor = Color.Purple,
                 HorizontalAlignment = HorizontalAlignment.Stretch,                
-                VerticalAlignment = VerticalAlignment.Stretch,
-                MaximumHeight=2000,
-                ScrollBarThickness = 50,                
+                VerticalAlignment = VerticalAlignment.Stretch,                
+                ScrollBarThickness = 50,                     
             };
-            scrollV.Content = grid;
+            
 
             var mainCanvas = new Canvas{                           
                 BackgroundColor = new Color(1.0f,0f,0f,0.5f),
             };
-            mainCanvas.Children.Add(scrollV);
+            
 
 
             // https://github.com/stride3d/stride/blob/273dfddd462fd3746569f833e1493700c070b14d/sources/engine/Stride.UI.Tests/Regression/CanvasGridTest.cs
@@ -95,7 +95,11 @@ namespace LoadObjectTest
                 };
                 var objPos = new Vector3(0f,4f,1f * i);
                 startButton.Click += (object sender, Stride.UI.Events.RoutedEventArgs e) => 
-                    { LoadAssetTest(objPos);  };
+                    { 
+                        scrollV.Name="scroll fun";
+                        LoadAssetTest(objPos);  
+
+                    };
 
                 startButton.DependencyProperties.Set(GridBase.RowPropertyKey,i/2);
                 startButton.DependencyProperties.Set(GridBase.ColumnPropertyKey,i%2);
@@ -104,8 +108,8 @@ namespace LoadObjectTest
                 grid.Children.Add(startButton);
             }
             
-            
-
+            scrollV.Content = grid;            
+            mainCanvas.Children.Add(scrollV);
             
             var mainMenuRoot = new ModalElement{
                 Width = 500,
@@ -118,6 +122,7 @@ namespace LoadObjectTest
                 };            
 
             Entity.Get<UIComponent>().Page = new UIPage { RootElement = mainMenuRoot };
+                        
         }
      
 
