@@ -51,13 +51,31 @@ namespace LoadObjectTest
 
         // https://github.com/stride3d/stride/blob/master/samples/Tutorials/CSharpBeginner/CSharpBeginner/CSharpBeginner.Game/Code/TutorialUI.cs#L34
 
-            var mainCanvas = new Canvas();
+            
             var grid = new UniformGrid{
+                Name = "grid 1",
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch,
                 BackgroundColor = Color.Yellow,
                 Columns = 2, Rows = 2,
             };
+            var scrollV = new ScrollViewer{
+                Name = "scroll 1",
+                ScrollMode = ScrollingMode.Vertical,
+                BackgroundColor = Color.Purple,
+                HorizontalAlignment = HorizontalAlignment.Stretch,                
+                VerticalAlignment = VerticalAlignment.Stretch,
+                MaximumHeight=2000,
+                ScrollBarThickness = 50,                
+            };
+            scrollV.Content = grid;
+
+            var mainCanvas = new Canvas{                           
+                BackgroundColor = new Color(1.0f,0f,0f,0.5f),
+            };
+            mainCanvas.Children.Add(scrollV);
+
+
             // https://github.com/stride3d/stride/blob/273dfddd462fd3746569f833e1493700c070b14d/sources/engine/Stride.UI.Tests/Regression/CanvasGridTest.cs
             for (int i=0; i< 3; i++) 
             { 
@@ -85,10 +103,10 @@ namespace LoadObjectTest
             
                 grid.Children.Add(startButton);
             }
-            mainCanvas.Children.Add(grid);
+            
             
 
-            mainCanvas.BackgroundColor = new Color(1.0f,0f,0f,0.5f);
+            
             var mainMenuRoot = new ModalElement{
                 Width = 500,
                 Height = 500,
