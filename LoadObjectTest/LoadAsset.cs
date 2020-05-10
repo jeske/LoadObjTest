@@ -43,42 +43,65 @@ namespace LoadObjectTest
 
         public SpriteFont myFont2;
 
+
+        
         public void CreateUI() {
         // var fontSystem = Services.GetService<FontSystem>();
         // var myFont = fontSystem.NewDynamic(10,"Orkney Regular",FontStyle.Regular);
 
         // https://github.com/stride3d/stride/blob/master/samples/Tutorials/CSharpBeginner/CSharpBeginner/CSharpBeginner.Game/Code/TutorialUI.cs#L34
-            var startButton = new Button {
-                Content = new TextBlock {
-                    Text = "Touch to Start",
-                    Font = myFont2, TextColor = Color.Black, 
-                    HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center,
-                    BackgroundColor = Color.Blue,                  
-                    },                
-                Padding = new Thickness(77, 30, 25, 30),
-                ClickMode = ClickMode.Press,
-                BackgroundColor = Color.Red,
-                MinimumWidth = 250f,                
-            };
-            startButton.Click += StartButton_Click;
-            var mainCanvas = new Canvas();
-            mainCanvas.Children.Add(startButton);
 
-            mainCanvas.BackgroundColor = Color.Red;
-            var mainMenuRoot = new ModalElement{
+            var mainCanvas = new Canvas();
+            var grid = new UniformGrid{
                 HorizontalAlignment = HorizontalAlignment.Stretch,
-                // VerticalAlignment = VerticalAlignment.Bottom,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                BackgroundColor = Color.Yellow,
+                Columns = 2, Rows = 2,
+            };
+            // https://github.com/stride3d/stride/blob/273dfddd462fd3746569f833e1493700c070b14d/sources/engine/Stride.UI.Tests/Regression/CanvasGridTest.cs
+            for (int i=0; i< 3; i++) 
+            { 
+            
+                var startButton = new Button {
+                    Content = new TextBlock {
+                        Text = "Create Object #" + i,
+                        Font = myFont2, TextColor = Color.Black, 
+                        HorizontalAlignment = HorizontalAlignment.Center, 
+                        VerticalAlignment = VerticalAlignment.Center,
+                        BackgroundColor = Color.LightBlue,                  
+                        },                
+                    Padding = new Thickness(77, 30, 25, 30),
+                    ClickMode = ClickMode.Press,
+                    BackgroundColor = Color.Green,                    
+                    MinimumWidth = 250f,                
+                };
+                var objPos = new Vector3(0f,4f,1f * i);
+                startButton.Click += (object sender, Stride.UI.Events.RoutedEventArgs e) => 
+                    { LoadAssetTest(objPos);  };
+
+                startButton.DependencyProperties.Set(GridBase.RowPropertyKey,i/2);
+                startButton.DependencyProperties.Set(GridBase.ColumnPropertyKey,i%2);
+
+            
+                grid.Children.Add(startButton);
+            }
+            mainCanvas.Children.Add(grid);
+            
+
+            mainCanvas.BackgroundColor = new Color(1.0f,0f,0f,0.5f);
+            var mainMenuRoot = new ModalElement{
+                Width = 500,
+                Height = 500,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Bottom,
                 DefaultHeight = 200,
-                Content = mainCanvas 
+                OverlayColor = new Color(0f,0f,0f,0f), // clear                
+                Content = mainCanvas,
                 };            
 
             Entity.Get<UIComponent>().Page = new UIPage { RootElement = mainMenuRoot };
         }
-
-        private void StartButton_Click(object sender, Stride.UI.Events.RoutedEventArgs e) {
-                        LoadAssetTest(new Vector3(0f,4f,0f));
-
-        }
+     
 
         private Texture textureObjectForWfTex(string textureFilename) {           
             var diffTexStream = System.IO.File.Open(textureFilename,System.IO.FileMode.Open,System.IO.FileAccess.Read);
@@ -93,9 +116,11 @@ namespace LoadObjectTest
             var entity = new Entity();
             
             var rootScene = SceneSystem.SceneInstance.RootScene;
-            entity.Transform.Scale = new Vector3(0.2f,0.2f,0.2f);
-            entity.Transform.Position = position;
             entity.Transform.RotationEulerXYZ = new Vector3(0,20,0);
+            entity.Transform.Scale = new Vector3(0.2f,0.2f,0.2f);            
+            entity.Transform.Position = position;            
+            
+            
             
             // Create a new model from code
             // https://doc.xenko.com/latest/en/manual/scripts/create-a-model-from-code.html
@@ -221,6 +246,8 @@ namespace LoadObjectTest
         public override void Start()
         {
             // Initialization of the script.
+            Game.Window.AllowUserResizing = true;
+
             LoadAssetTest(new Vector3(0f,2f,0f));
             CreateUI();
              
