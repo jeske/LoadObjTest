@@ -91,9 +91,9 @@ namespace SimpleScene.Util3d {
     public class WavefrontObjLoader {
 
         public struct Face {
-            public Int16[] v_idx;
-            public Int16[] n_idx;
-            public Int16[] tex_idx;
+            public Int32[] v_idx;
+            public Int32[] n_idx;
+            public Int32[] tex_idx;
         }
         
         public int numFaces = 0;        
@@ -216,9 +216,9 @@ namespace SimpleScene.Util3d {
                         int numPoints = values.Length;
                     
                         Face face = new Face(); 
-                        face.v_idx = new Int16[numPoints];
-                        face.n_idx = new Int16[numPoints];
-                        face.tex_idx = new Int16[numPoints];  // todo: how do outside clients know if there were texcoords or not?!?! 
+                        face.v_idx = new Int32[numPoints];
+                        face.n_idx = new Int32[numPoints];
+                        face.tex_idx = new Int32[numPoints];  // todo: how do outside clients know if there were texcoords or not?!?! 
 
                         for (int i = 0; i < numPoints; i++)
                         {
@@ -229,7 +229,7 @@ namespace SimpleScene.Util3d {
 
                             int iPosition = (int.Parse(indexes[0]) - 1);  // adjust 1-based index                    
                             if (iPosition < 0) { iPosition += positions.Count + 1; } // adjust negative indicies
-                            face.v_idx[i] = (Int16)iPosition; 
+                            face.v_idx[i] = iPosition; 
                             numIndices++;                
                             
                             // initialize other indicies to not provided, in case they are missing
@@ -243,7 +243,7 @@ namespace SimpleScene.Util3d {
                                     int iTexCoord = int.Parse(tex_index) - 1; // adjust 1-based index
                                     if (iTexCoord < 0) { iTexCoord += texCoords.Count + 1; }  // adjust negative indicies
 
-                                    face.tex_idx[i] = (Int16)iTexCoord;
+                                    face.tex_idx[i] = iTexCoord;
                                 }
 
                                 if (indexes.Length > 2)
@@ -252,7 +252,7 @@ namespace SimpleScene.Util3d {
                                     int iNormal = int.Parse(indexes[2]) - 1; // adjust 1 based index
                                     if (iNormal < 0) { iNormal += normals.Count + 1; } // adjust negative indicies
 
-                                    face.n_idx[i] = (Int16)iNormal;                                
+                                    face.n_idx[i] = iNormal;                                
                                 }
                             }
                         }
